@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flickr Background Page</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+    }
+    
+    #background-element {
+      height: 100vh;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+  </style>
+</head>
+<body>
+  <div id="background-element"></div>
+
+  <script>
+    const flickrAPIKey = '17220d43d784b03a7b237b7707d3f2a7';
+    const element = document.getElementById('background-element');
+
+    // Make a request to the Flickr API
+    fetch(`https://api.flickr.com/services/rest/?method=flickr.photos.getRecent&api_key=${flickrAPIKey}&format=json&nojsoncallback=1`)
+      .then(response => response.json())
+      .then(data => {
+        // Extract the URL of a random photo from the API response
+        const randomPhoto = data.photos.photo[Math.floor(Math.random() * data.photos.photo.length)];
+        const imageUrl = `https://farm${randomPhoto.farm}.staticflickr.com/${randomPhoto.server}/${randomPhoto.id}_${randomPhoto.secret}.jpg`;
+
+        // Set the retrieved image URL as the background image of the element
+        element.style.backgroundImage = `url(${imageUrl})`;
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  </script>
+</body>
+</html>
